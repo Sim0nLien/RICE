@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(MonProjet)
+project(RICE)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -8,7 +8,7 @@ add_subdirectory(src)
 add_subdirectory(utils)
 
 # Création de l'exécutable
-add_executable(MonProjet main.cpp)
+add_executable(RICE main.cpp)
 
 # Lier les bibliothèques (src et utils)
-target_link_libraries(MonProjet src utils)
+target_link_libraries(RICE src utils)
