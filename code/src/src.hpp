@@ -11,21 +11,15 @@
 
 template <class T> std::vector<T> int2bin(const T in, const T k){
     T val = in;
-    
-    std::vector<T> result;
+
+    std::vector<T> result(k, 0);
     
 
-    if(val == 0) {
-        result.push_back(0);
-        return result;
-    }
-    
-    while(val > 0) {
-        result.push_back(val % 2);
-        val = val / 2;
+    for (int i = k - 1; i >= 0; i--) {
+        result[i] = val & 1;
+        val >>= 1;
     }
 
-    std::reverse(result.begin(), result.end());
     return result;
 }
 
@@ -43,6 +37,7 @@ template <class T> std::vector<T> RICE_encode(const T in, const T k) {
 
     quotient = in / param;
     remainder = in % param;
+    printf("in: %d, param: %d, quotient: %d, remainder: %d\n", in, param, quotient, remainder);
     
     for(int i = 0; i < quotient; ++i) {
         result.push_back(1);
@@ -50,7 +45,7 @@ template <class T> std::vector<T> RICE_encode(const T in, const T k) {
     result.push_back(0);
 
     
-    param_vec = int2bin(remainder, param);
+    param_vec = int2bin(remainder, k);
 
     for(int i = 0; i < param_vec.size(); ++i) {
         result.push_back(param_vec[i]);
@@ -69,7 +64,30 @@ template <class T> std::vector<T> RICE(std::vector<T> in, const T k) {
 }
 
 
+template <class T> std::vector<T> RICE_decode(const std::vector<T>& in, const T k) {
+    std::vector<T> result;
+    T param = pow(2, k);
+    T quotient = 0;
+    T remainder = 0;
 
+    for (int i = 0; i < in.size(); ++i) {
+        if (in[i] == 1) {
+            quotient++;
+        } else {
+            remainder = 0;
+            for (int j = 0; j < k; ++j) {
+                if (i + j + 1 < in.size()) {
+                    remainder = (remainder << 1) | in[i + j + 1];
+                }
+            }
+            result.push_back(quotient * param + remainder);
+            quotient = 0;
+            i += k;
+        }
+    }
+
+    return result;
+}
 #endif // SRC_HPP
 
 
