@@ -88,6 +88,23 @@ template <class T> std::vector<T> RICE_decode(const std::vector<T>& in, const T 
 
     return result;
 }
+
+
+template <class T> std::vector<T> BEST_K(const std::vector<T>& in){
+    std::vector<T> result;
+    T best_k = 0;
+    T best_size = 0;
+
+    for (T k = 1; k < 32; ++k) {
+        std::vector<T> encoded = RICE(in, k);
+        T size = encoded.size();
+        if (size < best_size) {
+            best_size = size;
+            best_k = k;
+            result = encoded;
+        }
+    }
+}
 #endif // SRC_HPP
 
 
